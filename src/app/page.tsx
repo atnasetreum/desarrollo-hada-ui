@@ -4,11 +4,17 @@ import { type FormEvent, useMemo, useState } from "react";
 import ArrowForwardRoundedIcon from "@mui/icons-material/ArrowForwardRounded";
 import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
+import VisibilityOffRoundedIcon from "@mui/icons-material/VisibilityOffRounded";
+import VisibilityRoundedIcon from "@mui/icons-material/VisibilityRounded";
+import { DM_Sans, Sora } from "next/font/google";
 import {
   Box,
   Button,
+  Checkbox,
   CssBaseline,
   Divider,
+  FormControlLabel,
+  IconButton,
   InputAdornment,
   Link,
   Paper,
@@ -18,6 +24,16 @@ import {
   Typography,
   createTheme,
 } from "@mui/material";
+
+const headingFont = Sora({
+  subsets: ["latin"],
+  weight: ["600", "700"],
+});
+
+const bodyFont = DM_Sans({
+  subsets: ["latin"],
+  weight: ["400", "500", "700"],
+});
 
 type LoginForm = {
   email: string;
@@ -29,6 +45,8 @@ const LoginPage = () => {
     email: "",
     password: "",
   });
+  const [showPassword, setShowPassword] = useState(false);
+  const [rememberUser, setRememberUser] = useState(true);
 
   const theme = useMemo(
     () =>
@@ -47,12 +65,33 @@ const LoginPage = () => {
           borderRadius: 16,
         },
         typography: {
-          fontFamily: '"Montserrat", "Segoe UI", sans-serif',
+          fontFamily: bodyFont.style.fontFamily,
           h4: {
             fontWeight: 700,
+            fontFamily: headingFont.style.fontFamily,
+            letterSpacing: "-0.03em",
+          },
+          h5: {
+            fontFamily: headingFont.style.fontFamily,
+            fontWeight: 700,
+            letterSpacing: "-0.02em",
           },
           body2: {
             color: "#5A5F55",
+          },
+        },
+        components: {
+          MuiTextField: {
+            defaultProps: {
+              variant: "outlined",
+            },
+            styleOverrides: {
+              root: {
+                "& .MuiOutlinedInput-root": {
+                  borderRadius: 14,
+                },
+              },
+            },
           },
         },
       }),
@@ -83,6 +122,27 @@ const LoginPage = () => {
           placeItems: "center",
           px: 2,
           py: 4,
+          "@keyframes cardRise": {
+            from: {
+              opacity: 0,
+              transform: "translateY(18px)",
+            },
+            to: {
+              opacity: 1,
+              transform: "translateY(0)",
+            },
+          },
+          "@keyframes pulseFloat": {
+            "0%": {
+              transform: "translateY(0)",
+            },
+            "50%": {
+              transform: "translateY(-4px)",
+            },
+            "100%": {
+              transform: "translateY(0)",
+            },
+          },
           background:
             "radial-gradient(circle at 15% 15%, rgba(117,173,42,0.28), transparent 32%), radial-gradient(circle at 85% 85%, rgba(117,173,42,0.18), transparent 30%), linear-gradient(145deg, #F9FBF4 10%, #E8F1DA 100%)",
         }}
@@ -101,6 +161,7 @@ const LoginPage = () => {
               xs: "1fr",
               md: "1.1fr 1fr",
             },
+            animation: "cardRise 520ms ease-out",
           }}
         >
           <Box
@@ -114,6 +175,7 @@ const LoginPage = () => {
               justifyContent: "space-between",
               gap: 4,
               isolation: "isolate",
+              overflow: "hidden",
             }}
           >
             <Box
@@ -123,6 +185,29 @@ const LoginPage = () => {
                 background:
                   "linear-gradient(140deg, rgba(255,255,255,0.22) 0%, transparent 60%)",
                 zIndex: -1,
+              }}
+            />
+            <Box
+              sx={{
+                position: "absolute",
+                right: -46,
+                bottom: -46,
+                width: 188,
+                height: 188,
+                borderRadius: "50%",
+                border: "1px dashed rgba(255,255,255,0.35)",
+              }}
+            />
+            <Box
+              sx={{
+                position: "absolute",
+                right: 54,
+                top: 42,
+                width: 56,
+                height: 56,
+                borderRadius: 2,
+                bgcolor: "rgba(255,255,255,0.10)",
+                transform: "rotate(15deg)",
               }}
             />
 
@@ -138,6 +223,7 @@ const LoginPage = () => {
                   border: "1px solid rgba(255, 255, 255, 0.92)",
                   backdropFilter: "blur(3px)",
                   boxShadow: "0 10px 26px rgba(35, 58, 15, 0.22)",
+                  animation: "pulseFloat 4s ease-in-out infinite",
                 }}
               >
                 <Box
@@ -176,6 +262,7 @@ const LoginPage = () => {
               flexDirection: "column",
               justifyContent: "center",
               gap: 3,
+              animation: "cardRise 520ms ease-out 120ms both",
             }}
           >
             <Stack spacing={1}>
@@ -183,7 +270,7 @@ const LoginPage = () => {
                 Iniciar sesion
               </Typography>
               <Typography variant="body2">
-                Ingresa con tu correo corporativo y contrasena.
+                Ingresa con tu correo corporativo y contraseña.
               </Typography>
             </Stack>
 
@@ -206,8 +293,8 @@ const LoginPage = () => {
               />
 
               <TextField
-                label="Contrasena"
-                type="password"
+                label="Contraseña"
+                type={showPassword ? "text" : "password"}
                 value={form.password}
                 onChange={(event) =>
                   handleChange("password", event.target.value)
@@ -221,9 +308,36 @@ const LoginPage = () => {
                       <LockOutlinedIcon fontSize="small" />
                     </InputAdornment>
                   ),
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton
+                        aria-label="Mostrar u ocultar contrasena"
+                        onClick={() => setShowPassword((state) => !state)}
+                        edge="end"
+                      >
+                        {showPassword ? (
+                          <VisibilityOffRoundedIcon fontSize="small" />
+                        ) : (
+                          <VisibilityRoundedIcon fontSize="small" />
+                        )}
+                      </IconButton>
+                    </InputAdornment>
+                  ),
                 }}
               />
             </Stack>
+
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={rememberUser}
+                  onChange={(event) => setRememberUser(event.target.checked)}
+                  color="primary"
+                />
+              }
+              label="Recordarme en este equipo"
+              sx={{ mt: -1, color: "#4A5540" }}
+            />
 
             <Button
               type="submit"
@@ -236,6 +350,7 @@ const LoginPage = () => {
                 textTransform: "none",
                 borderRadius: 3,
                 boxShadow: "none",
+                minHeight: 48,
                 "&:hover": {
                   boxShadow: "none",
                 },
@@ -248,29 +363,36 @@ const LoginPage = () => {
 
             <Stack
               direction={{ xs: "column", sm: "row" }}
-              alignItems={{ xs: "flex-start", sm: "center" }}
+              alignItems={{ xs: "stretch", sm: "center" }}
               justifyContent="space-between"
               spacing={1.5}
+              sx={{ width: "100%" }}
             >
               <Link
                 href="#"
                 underline="hover"
                 color="primary.dark"
-                sx={{ fontWeight: 600 }}
+                sx={{
+                  fontWeight: 600,
+                  flex: 1,
+                  textAlign: { xs: "left", sm: "center" },
+                }}
               >
-                Olvidaste tu contrasena?
+                Registrarse
               </Link>
 
-              <Box
-                component="img"
-                src="https://api.comportarte.com/static/images/login/logo-inferior.png"
-                alt="Footer"
+              <Link
+                href="#"
+                underline="hover"
+                color="primary.dark"
                 sx={{
-                  height: 36,
-                  width: "auto",
-                  objectFit: "contain",
+                  fontWeight: 600,
+                  flex: 1,
+                  textAlign: { xs: "left", sm: "center" },
                 }}
-              />
+              >
+                ¿ Olvidaste tu contraseña ?
+              </Link>
             </Stack>
           </Box>
         </Paper>
