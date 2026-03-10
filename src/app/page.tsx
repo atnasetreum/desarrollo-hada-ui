@@ -1,12 +1,16 @@
 "use client";
 
 import { type FormEvent, useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
 import ArrowForwardRoundedIcon from "@mui/icons-material/ArrowForwardRounded";
 import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import VisibilityOffRoundedIcon from "@mui/icons-material/VisibilityOffRounded";
 import VisibilityRoundedIcon from "@mui/icons-material/VisibilityRounded";
 import { DM_Sans, Sora } from "next/font/google";
+import * as CryptoJS from "crypto-js";
+import { authService } from "@/services";
+import { useAuthStore } from "@/stores/auth.store";
 import {
   Box,
   Button,
@@ -41,12 +45,21 @@ type LoginForm = {
 };
 
 const LoginPage = () => {
+  const router = useRouter();
+  const { setSession } = useAuthStore();
+  const isDev = process.env.NODE_ENV === "development";
+  const cryptoKey =
+    process.env.NEXT_PUBLIC_AUTH_CREDENTIALS_CRYPTO_KEY ||
+    (isDev ? "dev_crypto_key_change_me" : "");
+
   const [form, setForm] = useState<LoginForm>({
-    email: "",
-    password: "",
+    email: isDev ? "eduardo-266@hotmail.com" : "",
+    password: isDev ? "12345678" : "",
   });
   const [showPassword, setShowPassword] = useState(false);
   const [rememberUser, setRememberUser] = useState(true);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const theme = useMemo(
     () =>
@@ -102,13 +115,52 @@ const LoginPage = () => {
     setForm((current) => ({ ...current, [field]: value }));
   };
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    console.log("Valores capturados:", {
-      correo: form.email,
-      contrasena: form.password,
-    });
+    if (!cryptoKey) {
+      setErrorMessage(
+        "No hay clave de cifrado configurada para autenticacion.",
+      );
+      return;
+    }
+
+    setErrorMessage(null);
+    setIsSubmitting(true);
+
+    try {
+      const encryptedEmail = CryptoJS.AES.encrypt(
+        form.email,
+        cryptoKey,
+      ).toString();
+      const encryptedPassword = CryptoJS.AES.encrypt(
+        form.password,
+        cryptoKey,
+      ).toString();
+
+      const response = await authService.login({
+        email: encryptedEmail,
+        password: encryptedPassword,
+      });
+
+      if (response.status < 200 || response.status >= 300) {
+        setErrorMessage("Credenciales invalidas o sesion no autorizada.");
+        return;
+      }
+
+      const sessionResponse = await authService.checkToken();
+      setSession({
+        userId: sessionResponse.data.userId,
+        user: sessionResponse.data.user,
+      });
+
+      router.push("/dashboard");
+      router.refresh();
+    } catch {
+      setErrorMessage("No fue posible iniciar sesion. Intenta de nuevo.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -347,6 +399,7 @@ const LoginPage = () => {
               type="submit"
               variant="contained"
               size="large"
+              disabled={isSubmitting}
               endIcon={<ArrowForwardRoundedIcon />}
               sx={{
                 py: 1.4,
@@ -360,8 +413,14 @@ const LoginPage = () => {
                 },
               }}
             >
-              Iniciar sesion
+              {isSubmitting ? "Ingresando..." : "Iniciar sesion"}
             </Button>
+
+            {errorMessage ? (
+              <Typography variant="body2" sx={{ color: "#B3261E", mt: -1 }}>
+                {errorMessage}
+              </Typography>
+            ) : null}
 
             <Divider sx={{ borderColor: "rgba(117, 173, 42, 0.2)" }} />
 
