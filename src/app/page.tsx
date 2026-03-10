@@ -240,15 +240,19 @@ const LoginPage = () => {
                 />
               </Box>
 
-              <Typography variant="h4">Recursos Humanos Inteligente</Typography>
+              <Typography variant="h4">Gestión Humana</Typography>
               <Typography variant="body1" sx={{ maxWidth: 360 }}>
                 Administra procesos, personal y seguimiento en una sola
                 plataforma.
               </Typography>
+              <Typography variant="body1" sx={{ maxWidth: 360 }}>
+                Optimiza tu gestión humana con herramientas integrales y fáciles
+                de usar.
+              </Typography>
             </Stack>
 
             <Typography variant="caption" sx={{ opacity: 0.9 }}>
-              Plataforma integral de gestion RH
+              Plataforma integral de gestion humana inteligente.
             </Typography>
           </Box>
 
