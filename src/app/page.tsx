@@ -154,8 +154,10 @@ const LoginPage = () => {
         user: sessionResponse.data.user,
       });
 
+      alert();
       router.push("/dashboard");
       router.refresh();
+      alert();
     } catch {
       setErrorMessage("No fue posible iniciar sesion. Intenta de nuevo.");
     } finally {
