@@ -11,6 +11,7 @@ import {
   Avatar,
   Box,
   Chip,
+  CircularProgress,
   CssBaseline,
   Divider,
   Drawer,
@@ -247,11 +248,76 @@ const MainLayout = ({ children }: { children: React.ReactNode }) => {
   );
 
   if (!isSessionReady) {
-    return <div>Cargando sesion...</div>;
+    return (
+      <Box
+        sx={{
+          minHeight: "100dvh",
+          display: "grid",
+          placeItems: "center",
+          backgroundColor: "#FFFFFF",
+          px: 2,
+        }}
+      >
+        <Box
+          sx={{
+            width: "100%",
+            maxWidth: 420,
+            borderRadius: 4,
+            border: "1px solid rgba(93, 142, 42, 0.24)",
+            boxShadow: "0 14px 34px rgba(23, 39, 11, 0.1)",
+            p: 4,
+            textAlign: "center",
+            background:
+              "linear-gradient(180deg, rgba(93,142,42,0.06) 0%, rgba(93,142,42,0.02) 100%)",
+          }}
+        >
+          <CircularProgress
+            size={28}
+            thickness={5}
+            sx={{ color: "#5D8E2A", mb: 2 }}
+          />
+          <Typography variant="h6" sx={{ fontWeight: 700, color: "#223119" }}>
+            Preparando tu sesion
+          </Typography>
+          <Typography variant="body2" sx={{ mt: 1, color: "#5A6651" }}>
+            Cargando permisos y configuracion de Gestion Humana...
+          </Typography>
+        </Box>
+      </Box>
+    );
   }
 
   if (!user || !userId) {
-    return <div>Redirigiendo...</div>;
+    return (
+      <Box
+        sx={{
+          minHeight: "100dvh",
+          display: "grid",
+          placeItems: "center",
+          backgroundColor: "#FFFFFF",
+          px: 2,
+        }}
+      >
+        <Box
+          sx={{
+            width: "100%",
+            maxWidth: 420,
+            borderRadius: 4,
+            border: "1px solid rgba(93, 142, 42, 0.2)",
+            p: 3,
+            textAlign: "center",
+            backgroundColor: "#FFFFFF",
+          }}
+        >
+          <Typography
+            variant="body1"
+            sx={{ color: "#2D3A24", fontWeight: 600 }}
+          >
+            Verificando acceso...
+          </Typography>
+        </Box>
+      </Box>
+    );
   }
 
   return (

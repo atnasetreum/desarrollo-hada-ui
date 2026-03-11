@@ -5,6 +5,7 @@ import {
   Box,
   Card,
   CardContent,
+  CircularProgress,
   Chip,
   LinearProgress,
   Stack,
@@ -22,7 +23,42 @@ const DashboardPage = () => {
   const { user, userId } = useAuthStore();
 
   if (!user || !userId) {
-    return <div>Redirigiendo...</div>;
+    return (
+      <Box
+        sx={{
+          minHeight: "60dvh",
+          display: "grid",
+          placeItems: "center",
+          px: 2,
+        }}
+      >
+        <Box
+          sx={{
+            width: "100%",
+            maxWidth: 420,
+            borderRadius: 4,
+            border: "1px solid rgba(140, 187, 78, 0.28)",
+            boxShadow: "0 12px 30px rgba(28, 44, 14, 0.1)",
+            p: 4,
+            textAlign: "center",
+            background:
+              "linear-gradient(180deg, rgba(140,187,78,0.08) 0%, rgba(255,255,255,1) 100%)",
+          }}
+        >
+          <CircularProgress
+            size={28}
+            thickness={5}
+            sx={{ color: ACCENT, mb: 2 }}
+          />
+          <Typography variant="h6" sx={{ fontWeight: 700, color: "#2A3521" }}>
+            Redirigiendo al panel
+          </Typography>
+          <Typography variant="body2" sx={{ mt: 1, color: "#64715D" }}>
+            Verificando credenciales y permisos de acceso...
+          </Typography>
+        </Box>
+      </Box>
+    );
   }
 
   return (
