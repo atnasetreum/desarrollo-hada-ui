@@ -121,10 +121,13 @@ const MainLayout = ({ children }: { children: React.ReactNode }) => {
   }, [clearSession, isSessionReady, router, setSession]);
 
   const handleLogout = async () => {
-    await authService.logout();
-    clearSession();
-    router.replace("/");
-    router.refresh();
+    try {
+      await authService.logout();
+    } finally {
+      clearSession();
+      router.replace("/");
+      router.refresh();
+    }
   };
 
   const menu = (
