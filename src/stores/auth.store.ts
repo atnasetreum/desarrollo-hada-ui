@@ -4,6 +4,7 @@ export type SessionUser = {
   id: number;
   name: string;
   email: string;
+  permissions: Record<string, string[]>;
 };
 
 type AuthStoreState = {

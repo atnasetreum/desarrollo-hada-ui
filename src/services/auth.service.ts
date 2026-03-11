@@ -9,6 +9,7 @@ export type CheckTokenResponse = {
     id: number;
     name: string;
     email: string;
+    permissions: Record<string, string[]>;
   };
 };
 
