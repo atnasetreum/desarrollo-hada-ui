@@ -324,7 +324,13 @@ const MainLayout = ({ children }: { children: React.ReactNode }) => {
   }
 
   return (
-    <Box sx={{ minHeight: "100dvh", backgroundColor: "#FFFFFF" }}>
+    <Box
+      sx={{
+        minHeight: "100dvh",
+        backgroundColor: "#FFFFFF",
+        overflow: "hidden",
+      }}
+    >
       <CssBaseline />
 
       <AppBar
@@ -414,7 +420,11 @@ const MainLayout = ({ children }: { children: React.ReactNode }) => {
         sx={{
           ml: { lg: `${drawerWidth}px` },
           mt: "72px",
+          minHeight: "calc(100dvh - 72px)",
           p: { xs: 2, md: 3 },
+          boxSizing: "border-box",
+          overflowY: "auto",
+          overflowX: "hidden",
         }}
       >
         <Box
