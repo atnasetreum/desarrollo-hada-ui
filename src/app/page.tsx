@@ -71,7 +71,7 @@ const LoginPage = () => {
             light: "#93C84D",
           },
           background: {
-            default: "#F4F8EE",
+            default: "#FFFFFF",
           },
         },
         shape: {
@@ -195,8 +195,7 @@ const LoginPage = () => {
               transform: "translateY(0)",
             },
           },
-          background:
-            "radial-gradient(circle at 15% 15%, rgba(117,173,42,0.28), transparent 32%), radial-gradient(circle at 85% 85%, rgba(117,173,42,0.18), transparent 30%), linear-gradient(145deg, #F9FBF4 10%, #E8F1DA 100%)",
+          background: "#FFFFFF",
         }}
       >
         <Paper
