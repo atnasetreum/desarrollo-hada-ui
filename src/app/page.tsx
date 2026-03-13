@@ -41,7 +41,7 @@ const LoginPage = () => {
     (isDev ? "dev_crypto_key_change_me" : "");
 
   const [form, setForm] = useState<LoginForm>({
-    email: isDev ? "eduardo-266@hotmail.com" : "",
+    email: isDev ? "ggarcia@hadamexico.com" : "",
     password: isDev ? "12345678" : "",
   });
   const [showPassword, setShowPassword] = useState(false);
