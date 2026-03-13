@@ -29,7 +29,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { alpha } from "@mui/material/styles";
+import { alpha, useColorScheme } from "@mui/material/styles";
 import { APP_COLORS } from "@/theme/tokens";
 
 type Product = {
@@ -65,6 +65,12 @@ const INITIAL_PRODUCTS: Product[] = [
 ];
 
 const PersonnelRequisitionPage = () => {
+  const { mode, systemMode } = useColorScheme();
+  const effectiveMode = mode === "system" ? systemMode : mode;
+  const isDarkMode = effectiveMode === "dark";
+  const darkRowEven = alpha(APP_COLORS.surface, 0.04);
+  const darkRowOdd = alpha(APP_COLORS.surface, 0.08);
+
   const [products, setProducts] = useState<Product[]>(INITIAL_PRODUCTS);
 
   const [sortField, setSortField] = useState<SortField | null>(null);
@@ -388,7 +394,11 @@ const PersonnelRequisitionPage = () => {
           size="small"
           sx={{
             "& .MuiTableCell-root": {
-              borderBottom: `1px solid ${alpha(APP_COLORS.secondary, 0.12)}`,
+              borderBottom: `1px solid ${
+                isDarkMode
+                  ? alpha(APP_COLORS.surface, 0.1)
+                  : alpha(APP_COLORS.secondary, 0.12)
+              }`,
             },
           }}
         >
@@ -459,10 +469,21 @@ const PersonnelRequisitionPage = () => {
                 sx={{
                   backgroundColor:
                     index % 2 === 0
-                      ? alpha(APP_COLORS.surface, 0.98)
-                      : "#F3F4F3",
+                      ? isDarkMode
+                        ? darkRowEven
+                        : alpha(APP_COLORS.surface, 0.98)
+                      : isDarkMode
+                        ? darkRowOdd
+                        : "#F3F4F3",
                   "& .MuiTableCell-root": {
-                    color: "text.primary",
+                    color: isDarkMode
+                      ? alpha(APP_COLORS.surface, 0.94)
+                      : "text.primary",
+                  },
+                  "&:hover": {
+                    backgroundColor: isDarkMode
+                      ? alpha(APP_COLORS.surface, 0.12)
+                      : undefined,
                   },
                 }}
               >
