@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { BackNavigationButton } from "@/app/back-navigation-button";
+import { APP_COLORS } from "@/theme/tokens";
 
 export const metadata: Metadata = {
   title: "404 | Desarrollo Hada",
@@ -16,8 +17,7 @@ const NotFoundPage = () => {
         display: "grid",
         placeItems: "center",
         padding: "24px",
-        background:
-          "radial-gradient(circle at 18% 20%, rgba(117, 173, 42, 0.18), transparent 45%), radial-gradient(circle at 80% 75%, rgba(93, 142, 42, 0.2), transparent 38%), linear-gradient(160deg, #f5f8ef 0%, #ffffff 52%, #eef4e2 100%)",
+        background: `radial-gradient(circle at 18% 20%, rgba(118, 182, 41, 0.18), transparent 45%), radial-gradient(circle at 80% 75%, rgba(0, 84, 45, 0.2), transparent 38%), linear-gradient(160deg, rgba(118, 182, 41, 0.09) 0%, ${APP_COLORS.surface} 52%, rgba(0, 84, 45, 0.08) 100%)`,
       }}
     >
       <section
@@ -25,12 +25,12 @@ const NotFoundPage = () => {
           width: "100%",
           maxWidth: "720px",
           borderRadius: "28px",
-          border: "1px solid rgba(93, 142, 42, 0.18)",
+          border: "1px solid rgba(118, 182, 41, 0.2)",
           background:
-            "linear-gradient(145deg, rgba(255,255,255,0.95), rgba(241, 248, 227, 0.95))",
+            "linear-gradient(145deg, rgba(255,255,255,0.95), rgba(118,182,41,0.08))",
           boxShadow: "0 20px 44px rgba(58, 89, 26, 0.14)",
           padding: "clamp(24px, 5vw, 48px)",
-          color: "#1f2f14",
+          color: APP_COLORS.secondary,
           textAlign: "center",
         }}
       >
@@ -40,7 +40,7 @@ const NotFoundPage = () => {
             fontSize: "12px",
             letterSpacing: "0.24em",
             fontWeight: 700,
-            color: "#5d8e2a",
+            color: APP_COLORS.primary,
           }}
         >
           ERROR DE NAVEGACION
@@ -52,7 +52,7 @@ const NotFoundPage = () => {
             fontSize: "clamp(52px, 11vw, 110px)",
             lineHeight: 1,
             fontWeight: 800,
-            color: "#4f7c23",
+            color: APP_COLORS.secondary,
           }}
         >
           404
@@ -75,7 +75,7 @@ const NotFoundPage = () => {
             maxWidth: "52ch",
             fontSize: "16px",
             lineHeight: 1.55,
-            color: "#3f4f35",
+            color: "rgba(0,84,45,0.82)",
           }}
         >
           La direccion que escribiste puede ser incorrecta o el contenido fue
@@ -98,9 +98,9 @@ const NotFoundPage = () => {
               padding: "12px 20px",
               textDecoration: "none",
               fontWeight: 700,
-              color: "#ffffff",
-              background: "linear-gradient(135deg, #5d8e2a, #75ad2a)",
-              boxShadow: "0 12px 24px rgba(93, 142, 42, 0.25)",
+              color: APP_COLORS.surface,
+              background: `linear-gradient(135deg, ${APP_COLORS.primary}, ${APP_COLORS.secondary})`,
+              boxShadow: "0 12px 24px rgba(0, 84, 45, 0.25)",
             }}
           >
             Ir al inicio
@@ -113,9 +113,9 @@ const NotFoundPage = () => {
               padding: "12px 20px",
               textDecoration: "none",
               fontWeight: 700,
-              color: "#35521a",
-              background: "#ffffff",
-              border: "1px solid rgba(93, 142, 42, 0.42)",
+              color: APP_COLORS.secondary,
+              background: APP_COLORS.surface,
+              border: "1px solid rgba(118, 182, 41, 0.42)",
             }}
           >
             Ir al dashboard

@@ -1,6 +1,7 @@
 "use client";
 
 import Grid from "@mui/material/Grid";
+import { APP_COLORS } from "@/theme/tokens";
 import {
   Box,
   Card,
@@ -11,13 +12,12 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
+import { alpha } from "@mui/material/styles";
 import TrendingUpRoundedIcon from "@mui/icons-material/TrendingUpRounded";
 import BadgeRoundedIcon from "@mui/icons-material/BadgeRounded";
 import GroupsRoundedIcon from "@mui/icons-material/GroupsRounded";
 import PersonSearchRoundedIcon from "@mui/icons-material/PersonSearchRounded";
 import { useAuthStore } from "@/stores/auth.store";
-
-const ACCENT = "#8CBB4E";
 
 const DashboardPage = () => {
   const { user, userId } = useAuthStore();
@@ -37,23 +37,25 @@ const DashboardPage = () => {
             width: "100%",
             maxWidth: 420,
             borderRadius: 4,
-            border: "1px solid rgba(140, 187, 78, 0.28)",
+            border: `1px solid ${alpha(APP_COLORS.primary, 0.28)}`,
             boxShadow: "0 12px 30px rgba(28, 44, 14, 0.1)",
             p: 4,
             textAlign: "center",
-            background:
-              "linear-gradient(180deg, rgba(140,187,78,0.08) 0%, rgba(255,255,255,1) 100%)",
+            backgroundColor: "background.paper",
           }}
         >
           <CircularProgress
             size={28}
             thickness={5}
-            sx={{ color: ACCENT, mb: 2 }}
+            sx={{ color: "primary.main", mb: 2 }}
           />
-          <Typography variant="h6" sx={{ fontWeight: 700, color: "#2A3521" }}>
+          <Typography
+            variant="h6"
+            sx={{ fontWeight: 700, color: "text.primary" }}
+          >
             Redirigiendo al panel
           </Typography>
-          <Typography variant="body2" sx={{ mt: 1, color: "#64715D" }}>
+          <Typography variant="body2" sx={{ mt: 1, color: "text.secondary" }}>
             Verificando credenciales y permisos de acceso...
           </Typography>
         </Box>
@@ -68,14 +70,14 @@ const DashboardPage = () => {
           variant="h4"
           sx={{
             fontWeight: 800,
-            color: "#212721",
+            color: "text.primary",
             letterSpacing: -0.25,
             textWrap: "balance",
           }}
         >
           Panel de Gestion Humana
         </Typography>
-        <Typography variant="body1" sx={{ color: "#626A63" }}>
+        <Typography variant="body1" sx={{ color: "text.secondary" }}>
           Bienvenido, {user.name}. Seguimiento estrategico de personas y
           cultura.
         </Typography>
@@ -85,9 +87,10 @@ const DashboardPage = () => {
         <Grid size={{ xs: 12, md: 6, xl: 3 }}>
           <Card
             sx={{
-              borderRadius: 4,
-              border: "1px solid #E3E6DF",
-              backgroundColor: "#FFFFFF",
+              borderRadius: "16px",
+              border: `1px solid ${alpha(APP_COLORS.primary, 0.2)}`,
+              backgroundColor: "background.paper",
+              boxShadow: `0 6px 16px ${alpha(APP_COLORS.secondary, 0.08)}`,
               animation: "fadeInUp 420ms ease-out",
               "@media (prefers-reduced-motion: reduce)": {
                 animation: "none",
@@ -104,17 +107,20 @@ const DashboardPage = () => {
                 justifyContent="space-between"
                 alignItems="center"
               >
-                <Typography variant="subtitle2" sx={{ color: "#49524C" }}>
+                <Typography
+                  variant="subtitle2"
+                  sx={{ color: "text.secondary" }}
+                >
                   Rotacion mensual
                 </Typography>
-                <TrendingUpRoundedIcon sx={{ color: ACCENT }} />
+                <TrendingUpRoundedIcon sx={{ color: "primary.main" }} />
               </Stack>
               <Typography
                 variant="h5"
                 sx={{
                   mt: 1,
                   fontWeight: 800,
-                  color: "#202620",
+                  color: "text.primary",
                   fontVariantNumeric: "tabular-nums",
                 }}
               >
@@ -125,8 +131,8 @@ const DashboardPage = () => {
                 size="small"
                 sx={{
                   mt: 1,
-                  bgcolor: "rgba(140, 187, 78, 0.18)",
-                  color: "#425132",
+                  bgcolor: alpha(APP_COLORS.primary, 0.18),
+                  color: "text.primary",
                   fontWeight: 700,
                 }}
               />
@@ -137,9 +143,10 @@ const DashboardPage = () => {
         <Grid size={{ xs: 12, md: 6, xl: 3 }}>
           <Card
             sx={{
-              borderRadius: 4,
-              border: "1px solid #E3E6DF",
-              backgroundColor: "#FFFFFF",
+              borderRadius: "16px",
+              border: `1px solid ${alpha(APP_COLORS.primary, 0.2)}`,
+              backgroundColor: "background.paper",
+              boxShadow: `0 6px 16px ${alpha(APP_COLORS.secondary, 0.08)}`,
             }}
           >
             <CardContent>
@@ -148,17 +155,20 @@ const DashboardPage = () => {
                 justifyContent="space-between"
                 alignItems="center"
               >
-                <Typography variant="subtitle2" sx={{ color: "#49524C" }}>
+                <Typography
+                  variant="subtitle2"
+                  sx={{ color: "text.secondary" }}
+                >
                   Colaboradores activos
                 </Typography>
-                <BadgeRoundedIcon sx={{ color: ACCENT }} />
+                <BadgeRoundedIcon sx={{ color: "primary.main" }} />
               </Stack>
               <Typography
                 variant="h5"
                 sx={{
                   mt: 1,
                   fontWeight: 800,
-                  color: "#202620",
+                  color: "text.primary",
                   fontVariantNumeric: "tabular-nums",
                 }}
               >
@@ -169,8 +179,8 @@ const DashboardPage = () => {
                 size="small"
                 sx={{
                   mt: 1,
-                  bgcolor: "#F1F3EE",
-                  color: "#4F564F",
+                  bgcolor: alpha(APP_COLORS.primary, 0.12),
+                  color: "text.secondary",
                   fontWeight: 600,
                 }}
               />
@@ -181,9 +191,10 @@ const DashboardPage = () => {
         <Grid size={{ xs: 12, md: 6, xl: 3 }}>
           <Card
             sx={{
-              borderRadius: 4,
-              border: "1px solid #E3E6DF",
-              backgroundColor: "#FFFFFF",
+              borderRadius: "16px",
+              border: `1px solid ${alpha(APP_COLORS.primary, 0.2)}`,
+              backgroundColor: "background.paper",
+              boxShadow: `0 6px 16px ${alpha(APP_COLORS.secondary, 0.08)}`,
             }}
           >
             <CardContent>
@@ -192,17 +203,20 @@ const DashboardPage = () => {
                 justifyContent="space-between"
                 alignItems="center"
               >
-                <Typography variant="subtitle2" sx={{ color: "#49524C" }}>
+                <Typography
+                  variant="subtitle2"
+                  sx={{ color: "text.secondary" }}
+                >
                   Vacantes activas
                 </Typography>
-                <GroupsRoundedIcon sx={{ color: ACCENT }} />
+                <GroupsRoundedIcon sx={{ color: "primary.main" }} />
               </Stack>
               <Typography
                 variant="h5"
                 sx={{
                   mt: 1,
                   fontWeight: 800,
-                  color: "#202620",
+                  color: "text.primary",
                   fontVariantNumeric: "tabular-nums",
                 }}
               >
@@ -213,8 +227,8 @@ const DashboardPage = () => {
                 size="small"
                 sx={{
                   mt: 1,
-                  bgcolor: "#F1F3EE",
-                  color: "#4F564F",
+                  bgcolor: alpha(APP_COLORS.primary, 0.12),
+                  color: "text.secondary",
                   fontWeight: 600,
                 }}
               />
@@ -225,9 +239,10 @@ const DashboardPage = () => {
         <Grid size={{ xs: 12, md: 6, xl: 3 }}>
           <Card
             sx={{
-              borderRadius: 4,
-              border: "1px solid #E3E6DF",
-              backgroundColor: "#FFFFFF",
+              borderRadius: "16px",
+              border: `1px solid ${alpha(APP_COLORS.primary, 0.2)}`,
+              backgroundColor: "background.paper",
+              boxShadow: `0 6px 16px ${alpha(APP_COLORS.secondary, 0.08)}`,
             }}
           >
             <CardContent>
@@ -236,17 +251,20 @@ const DashboardPage = () => {
                 justifyContent="space-between"
                 alignItems="center"
               >
-                <Typography variant="subtitle2" sx={{ color: "#49524C" }}>
+                <Typography
+                  variant="subtitle2"
+                  sx={{ color: "text.secondary" }}
+                >
                   Procesos de seleccion
                 </Typography>
-                <PersonSearchRoundedIcon sx={{ color: ACCENT }} />
+                <PersonSearchRoundedIcon sx={{ color: "primary.main" }} />
               </Stack>
               <Typography
                 variant="h5"
                 sx={{
                   mt: 1,
                   fontWeight: 800,
-                  color: "#202620",
+                  color: "text.primary",
                   fontVariantNumeric: "tabular-nums",
                 }}
               >
@@ -257,8 +275,8 @@ const DashboardPage = () => {
                 size="small"
                 sx={{
                   mt: 1,
-                  bgcolor: "#F1F3EE",
-                  color: "#4F564F",
+                  bgcolor: alpha(APP_COLORS.primary, 0.12),
+                  color: "text.secondary",
                   fontWeight: 600,
                 }}
               />
@@ -271,19 +289,23 @@ const DashboardPage = () => {
         <Grid size={{ xs: 12, lg: 8 }}>
           <Card
             sx={{
-              borderRadius: 4,
-              border: "1px solid #E3E6DF",
-              backgroundColor: "#FFFFFF",
+              borderRadius: "16px",
+              border: `1px solid ${alpha(APP_COLORS.primary, 0.2)}`,
+              backgroundColor: "background.paper",
+              boxShadow: `0 6px 16px ${alpha(APP_COLORS.secondary, 0.08)}`,
             }}
           >
             <CardContent>
               <Typography
                 variant="h6"
-                sx={{ fontWeight: 700, color: "#232A24" }}
+                sx={{ fontWeight: 700, color: "text.primary" }}
               >
                 Indicadores por frente de gestion
               </Typography>
-              <Typography variant="body2" sx={{ mb: 2, color: "#646C65" }}>
+              <Typography
+                variant="body2"
+                sx={{ mb: 2, color: "text.secondary" }}
+              >
                 Avance semanal en prioridades clave de talento.
               </Typography>
               <Stack spacing={1.5}>
@@ -301,11 +323,14 @@ const DashboardPage = () => {
                     >
                       <Typography
                         variant="body2"
-                        sx={{ color: "#343D36", fontWeight: 600 }}
+                        sx={{ color: "text.primary", fontWeight: 600 }}
                       >
                         {item.label}
                       </Typography>
-                      <Typography variant="caption" sx={{ color: "#5E665F" }}>
+                      <Typography
+                        variant="caption"
+                        sx={{ color: "text.secondary" }}
+                      >
                         {item.value}%
                       </Typography>
                     </Stack>
@@ -313,12 +338,12 @@ const DashboardPage = () => {
                       variant="determinate"
                       value={item.value}
                       sx={{
-                        height: 10,
-                        borderRadius: 8,
-                        backgroundColor: "#ECEFE9",
+                        height: 11,
+                        borderRadius: 999,
+                        backgroundColor: alpha(APP_COLORS.primary, 0.15),
                         "& .MuiLinearProgress-bar": {
-                          borderRadius: 8,
-                          background: `linear-gradient(90deg, ${ACCENT}, #A8C77D)`,
+                          borderRadius: 999,
+                          backgroundColor: APP_COLORS.primary,
                         },
                       }}
                     />
@@ -332,30 +357,33 @@ const DashboardPage = () => {
         <Grid size={{ xs: 12, lg: 4 }}>
           <Card
             sx={{
-              borderRadius: 4,
-              border: "1px solid #E3E6DF",
-              background:
-                "radial-gradient(circle at top right, rgba(140,187,78,0.18), rgba(255,255,255,0.98) 58%)",
+              borderRadius: "16px",
+              border: `1px solid ${alpha(APP_COLORS.primary, 0.2)}`,
+              backgroundColor: "background.paper",
+              boxShadow: `0 6px 16px ${alpha(APP_COLORS.secondary, 0.08)}`,
             }}
           >
             <CardContent>
               <Typography
                 variant="h6"
-                sx={{ fontWeight: 700, color: "#252D26" }}
+                sx={{ fontWeight: 700, color: "text.primary" }}
               >
                 Sesion de RR. HH.
               </Typography>
-              <Typography variant="body2" sx={{ color: "#636C64", mb: 2 }}>
+              <Typography
+                variant="body2"
+                sx={{ color: "text.secondary", mb: 2 }}
+              >
                 Acceso autorizado al centro de personas.
               </Typography>
               <Stack spacing={1}>
-                <Typography variant="body2" sx={{ color: "#3B433D" }}>
+                <Typography variant="body2" sx={{ color: "text.primary" }}>
                   Responsable: <strong>{user.name}</strong>
                 </Typography>
-                <Typography variant="body2" sx={{ color: "#3B433D" }}>
+                <Typography variant="body2" sx={{ color: "text.primary" }}>
                   Correo institucional: <strong>{user.email}</strong>
                 </Typography>
-                <Typography variant="body2" sx={{ color: "#3B433D" }}>
+                <Typography variant="body2" sx={{ color: "text.primary" }}>
                   ID de sesion: <strong>{userId}</strong>
                 </Typography>
               </Stack>

@@ -1,6 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import { APP_COLORS } from "@/theme/tokens";
 
 export const BackNavigationButton = () => {
   const router = useRouter();
@@ -22,9 +23,9 @@ export const BackNavigationButton = () => {
         borderRadius: "14px",
         padding: "12px 20px",
         fontWeight: 700,
-        color: "#35521a",
-        background: "#f4f9eb",
-        border: "1px solid rgba(93, 142, 42, 0.42)",
+        color: APP_COLORS.secondary,
+        background: "rgba(118, 182, 41, 0.14)",
+        border: "1px solid rgba(118, 182, 41, 0.42)",
         cursor: "pointer",
       }}
     >

@@ -4,8 +4,10 @@ import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 
+import { ThemeModeSwitcher } from "@/components/theme-mode-switcher";
 import { authService } from "@/services";
 import { useAuthStore } from "@/stores/auth.store";
+import { APP_COLORS } from "@/theme/tokens";
 import {
   AppBar,
   Avatar,
@@ -25,7 +27,7 @@ import {
   Typography,
   useMediaQuery,
 } from "@mui/material";
-import { useTheme } from "@mui/material/styles";
+import { alpha, useColorScheme, useTheme } from "@mui/material/styles";
 import MenuRoundedIcon from "@mui/icons-material/MenuRounded";
 import SpaceDashboardRoundedIcon from "@mui/icons-material/SpaceDashboardRounded";
 import Groups2RoundedIcon from "@mui/icons-material/Groups2Rounded";
@@ -81,7 +83,10 @@ const MainLayout = ({ children }: { children: React.ReactNode }) => {
   const router = useRouter();
   const pathname = usePathname();
   const theme = useTheme();
+  const { mode, systemMode } = useColorScheme();
   const isDesktop = useMediaQuery(theme.breakpoints.up("lg"));
+  const effectiveMode = mode === "system" ? systemMode : mode;
+  const isDarkMode = effectiveMode === "dark";
   const [mobileDrawerOpen, setMobileDrawerOpen] = useState(false);
   const { isSessionReady, user, userId, setSession, clearSession } =
     useAuthStore();
@@ -130,6 +135,16 @@ const MainLayout = ({ children }: { children: React.ReactNode }) => {
     }
   };
 
+  const shellBg = isDarkMode ? "#171C18" : APP_COLORS.primary;
+  const shellText = APP_COLORS.surface;
+  const shellMutedText = isDarkMode
+    ? alpha(APP_COLORS.surface, 0.82)
+    : alpha(APP_COLORS.surface, 0.84);
+  const menuText = isDarkMode ? APP_COLORS.surface : shellText;
+  const menuMutedText = isDarkMode
+    ? alpha(APP_COLORS.surface, 0.82)
+    : shellMutedText;
+
   const menu = (
     <Box
       sx={{
@@ -137,24 +152,53 @@ const MainLayout = ({ children }: { children: React.ReactNode }) => {
         p: 2,
         display: "flex",
         flexDirection: "column",
-        background: "linear-gradient(180deg, #5D8E2A 0%, #4D7623 100%)",
-        color: "#FFFFFF",
+        backgroundColor: shellBg,
+        color: menuText,
+        position: "relative",
+        overflow: "hidden",
+        "&::before": {
+          content: '""',
+          position: "absolute",
+          right: -86,
+          bottom: -94,
+          width: 210,
+          height: 210,
+          borderRadius: "50%",
+          border: `1px dashed ${alpha(APP_COLORS.surface, 0.34)}`,
+        },
+        "&::after": {
+          content: '""',
+          position: "absolute",
+          right: 24,
+          top: 56,
+          width: 54,
+          height: 54,
+          borderRadius: "50%",
+          backgroundColor: isDarkMode
+            ? alpha(APP_COLORS.primary, 0.2)
+            : alpha(APP_COLORS.surface, 0.1),
+        },
       }}
     >
       <Box
         sx={{
-          border: "1px solid rgba(255,255,255,0.4)",
+          border: `1px solid ${isDarkMode ? alpha(APP_COLORS.primary, 0.4) : alpha(APP_COLORS.surface, 0.42)}`,
           borderRadius: 3,
           p: 2,
-          background:
-            "linear-gradient(145deg, rgba(255,255,255,0.24), rgba(255,255,255,0.08))",
+          backgroundColor: isDarkMode
+            ? alpha(APP_COLORS.primary, 0.14)
+            : alpha(APP_COLORS.surface, 0.18),
+          color: menuText,
+          boxShadow: `0 12px 24px ${alpha(APP_COLORS.secondary, 0.16)}`,
           backdropFilter: "blur(2px)",
+          position: "relative",
+          zIndex: 1,
         }}
       >
         <Typography
           variant="caption"
           sx={{
-            color: "rgba(255,255,255,0.9)",
+            color: menuMutedText,
             letterSpacing: 1,
             fontWeight: 700,
           }}
@@ -166,8 +210,7 @@ const MainLayout = ({ children }: { children: React.ReactNode }) => {
           sx={{
             mt: 0.5,
             fontWeight: 800,
-            color: "#FFFFFF",
-            textShadow: "0 1px 2px rgba(0,0,0,0.2)",
+            color: menuText,
           }}
         >
           Plataforma de Capital Humano
@@ -191,34 +234,49 @@ const MainLayout = ({ children }: { children: React.ReactNode }) => {
               }}
               sx={{
                 borderRadius: 2,
-                color: "#FFFFFF",
+                color: menuText,
                 border: "1px solid transparent",
                 backgroundColor: isActive
-                  ? "rgba(255, 255, 255, 0.24)"
+                  ? isDarkMode
+                    ? alpha(APP_COLORS.primary, 0.16)
+                    : alpha(APP_COLORS.surface, 0.22)
                   : "transparent",
                 borderColor: isActive
-                  ? "rgba(255, 255, 255, 0.45)"
+                  ? isDarkMode
+                    ? alpha(APP_COLORS.primary, 0.36)
+                    : alpha(APP_COLORS.surface, 0.42)
                   : "transparent",
-                boxShadow: isActive
-                  ? "0 8px 18px rgba(13, 21, 7, 0.24)"
-                  : "none",
                 "&:hover": {
-                  backgroundColor: "rgba(255, 255, 255, 0.16)",
+                  backgroundColor: isDarkMode
+                    ? alpha(APP_COLORS.primary, 0.1)
+                    : alpha(APP_COLORS.surface, 0.14),
                 },
                 "&:focus-visible": {
-                  outline: "2px solid #D9F0B4",
+                  outline: `2px solid ${
+                    isDarkMode
+                      ? alpha(APP_COLORS.primary, 0.82)
+                      : alpha(APP_COLORS.surface, 0.86)
+                  }`,
                   outlineOffset: 2,
                 },
                 "&.Mui-disabled": {
                   opacity: 1,
-                  color: "rgba(255, 255, 255, 0.72)",
+                  color: menuMutedText,
                 },
               }}
             >
               <ListItemIcon sx={{ color: "inherit", minWidth: 34 }}>
                 {item.icon}
               </ListItemIcon>
-              <ListItemText primary={item.label} />
+              <ListItemText
+                primary={item.label}
+                primaryTypographyProps={{
+                  sx: {
+                    color: "inherit",
+                    fontWeight: isActive ? 700 : 500,
+                  },
+                }}
+              />
               {!item.enabled ? (
                 <Chip
                   size="small"
@@ -227,9 +285,15 @@ const MainLayout = ({ children }: { children: React.ReactNode }) => {
                     height: 22,
                     fontSize: 10,
                     fontWeight: 700,
-                    backgroundColor: "rgba(255,255,255,0.22)",
-                    color: "#FFFFFF",
-                    border: "1px solid rgba(255,255,255,0.3)",
+                    backgroundColor: isDarkMode
+                      ? alpha(APP_COLORS.primary, 0.18)
+                      : alpha(APP_COLORS.surface, 0.2),
+                    color: menuText,
+                    border: `1px solid ${
+                      isDarkMode
+                        ? alpha(APP_COLORS.primary, 0.34)
+                        : alpha(APP_COLORS.surface, 0.3)
+                    }`,
                   }}
                 />
               ) : null}
@@ -238,11 +302,21 @@ const MainLayout = ({ children }: { children: React.ReactNode }) => {
         })}
       </List>
 
-      <Box sx={{ mt: "auto", pt: 2 }}>
-        <Divider sx={{ borderColor: "rgba(255, 255, 255, 0.24)" }} />
+      <Box sx={{ mt: "auto", pt: 2, position: "relative", zIndex: 1 }}>
+        <Divider
+          sx={{
+            borderColor: isDarkMode
+              ? alpha(APP_COLORS.primary, 0.24)
+              : alpha(APP_COLORS.surface, 0.24),
+          }}
+        />
         <Typography
           variant="caption"
-          sx={{ mt: 1.5, display: "block", opacity: 0.8 }}
+          sx={{
+            mt: 1.5,
+            display: "block",
+            color: menuMutedText,
+          }}
         >
           v2026.03.10
         </Typography>
@@ -257,7 +331,7 @@ const MainLayout = ({ children }: { children: React.ReactNode }) => {
           minHeight: "100dvh",
           display: "grid",
           placeItems: "center",
-          backgroundColor: "#FFFFFF",
+          backgroundColor: "background.default",
           px: 2,
         }}
       >
@@ -266,23 +340,25 @@ const MainLayout = ({ children }: { children: React.ReactNode }) => {
             width: "100%",
             maxWidth: 420,
             borderRadius: 4,
-            border: "1px solid rgba(93, 142, 42, 0.24)",
+            border: `1px solid ${alpha(APP_COLORS.primary, 0.35)}`,
             boxShadow: "0 14px 34px rgba(23, 39, 11, 0.1)",
             p: 4,
             textAlign: "center",
-            background:
-              "linear-gradient(180deg, rgba(93,142,42,0.06) 0%, rgba(93,142,42,0.02) 100%)",
+            backgroundColor: "background.paper",
           }}
         >
           <CircularProgress
             size={28}
             thickness={5}
-            sx={{ color: "#5D8E2A", mb: 2 }}
+            sx={{ color: "primary.main", mb: 2 }}
           />
-          <Typography variant="h6" sx={{ fontWeight: 700, color: "#223119" }}>
+          <Typography
+            variant="h6"
+            sx={{ fontWeight: 700, color: "text.primary" }}
+          >
             Preparando tu sesion
           </Typography>
-          <Typography variant="body2" sx={{ mt: 1, color: "#5A6651" }}>
+          <Typography variant="body2" sx={{ mt: 1, color: "text.secondary" }}>
             Cargando permisos y configuracion de Gestion Humana...
           </Typography>
         </Box>
@@ -297,7 +373,7 @@ const MainLayout = ({ children }: { children: React.ReactNode }) => {
           minHeight: "100dvh",
           display: "grid",
           placeItems: "center",
-          backgroundColor: "#FFFFFF",
+          backgroundColor: "background.default",
           px: 2,
         }}
       >
@@ -306,15 +382,15 @@ const MainLayout = ({ children }: { children: React.ReactNode }) => {
             width: "100%",
             maxWidth: 420,
             borderRadius: 4,
-            border: "1px solid rgba(93, 142, 42, 0.2)",
+            border: `1px solid ${alpha(APP_COLORS.primary, 0.28)}`,
             p: 3,
             textAlign: "center",
-            backgroundColor: "#FFFFFF",
+            backgroundColor: "background.paper",
           }}
         >
           <Typography
             variant="body1"
-            sx={{ color: "#2D3A24", fontWeight: 600 }}
+            sx={{ color: "text.primary", fontWeight: 600 }}
           >
             Verificando acceso...
           </Typography>
@@ -327,7 +403,7 @@ const MainLayout = ({ children }: { children: React.ReactNode }) => {
     <Box
       sx={{
         minHeight: "100dvh",
-        backgroundColor: "#FFFFFF",
+        backgroundColor: "background.default",
         overflow: "hidden",
       }}
     >
@@ -338,9 +414,14 @@ const MainLayout = ({ children }: { children: React.ReactNode }) => {
         sx={{
           ml: { lg: `${drawerWidth}px` },
           width: { lg: `calc(100% - ${drawerWidth}px)` },
-          background: "linear-gradient(180deg, #5D8E2A 0%, #4D7623 100%)",
-          borderBottom: "1px solid rgba(255, 255, 255, 0.14)",
-          color: "#FFFFFF",
+          backgroundColor: shellBg,
+          borderBottom: `1px solid ${
+            isDarkMode
+              ? alpha(APP_COLORS.primary, 0.22)
+              : alpha(APP_COLORS.surface, 0.2)
+          }`,
+          color: shellText,
+          boxShadow: `0 3px 18px ${alpha(APP_COLORS.secondary, 0.12)}`,
         }}
       >
         <Toolbar sx={{ minHeight: 72 }}>
@@ -349,7 +430,7 @@ const MainLayout = ({ children }: { children: React.ReactNode }) => {
               aria-label="Abrir menu"
               onClick={() => setMobileDrawerOpen(true)}
               edge="start"
-              sx={{ mr: 1, color: "#FFFFFF" }}
+              sx={{ mr: 1, color: shellText }}
             >
               <MenuRoundedIcon />
             </IconButton>
@@ -362,12 +443,19 @@ const MainLayout = ({ children }: { children: React.ReactNode }) => {
           </Box>
 
           <Stack direction="row" spacing={1.5} alignItems="center">
+            <ThemeModeSwitcher />
             <Avatar
               sx={{
-                bgcolor: "rgba(255, 255, 255, 0.3)",
-                color: "#FFFFFF",
+                bgcolor: isDarkMode
+                  ? alpha(APP_COLORS.primary, 0.22)
+                  : alpha(APP_COLORS.surface, 0.2),
+                color: shellText,
                 fontWeight: 800,
-                border: "1px solid rgba(255, 255, 255, 0.35)",
+                border: `1px solid ${
+                  isDarkMode
+                    ? alpha(APP_COLORS.primary, 0.36)
+                    : alpha(APP_COLORS.surface, 0.34)
+                }`,
               }}
             >
               {userInitials}
@@ -375,21 +463,22 @@ const MainLayout = ({ children }: { children: React.ReactNode }) => {
             <Box sx={{ display: { xs: "none", sm: "block" } }}>
               <Typography
                 variant="body2"
-                sx={{ fontWeight: 700, lineHeight: 1.1, color: "#FFFFFF" }}
+                sx={{
+                  fontWeight: 700,
+                  lineHeight: 1.1,
+                  color: shellText,
+                }}
               >
                 {user.name}
               </Typography>
-              <Typography
-                variant="caption"
-                sx={{ color: "rgba(255, 255, 255, 0.82)" }}
-              >
+              <Typography variant="caption" sx={{ color: shellMutedText }}>
                 Colaborador #{userId}
               </Typography>
             </Box>
             <IconButton
               aria-label="Cerrar sesion"
               onClick={handleLogout}
-              sx={{ color: "#FFFFFF" }}
+              sx={{ color: shellText }}
             >
               <LogoutRoundedIcon />
             </IconButton>
@@ -408,6 +497,7 @@ const MainLayout = ({ children }: { children: React.ReactNode }) => {
           "& .MuiDrawer-paper": {
             width: drawerWidth,
             borderRight: "none",
+            backgroundColor: shellBg,
             boxSizing: "border-box",
           },
         }}

@@ -1,21 +1,21 @@
 "use client";
 
-import { type FormEvent, useMemo, useState } from "react";
+import { type FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
 import ArrowForwardRoundedIcon from "@mui/icons-material/ArrowForwardRounded";
 import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import VisibilityOffRoundedIcon from "@mui/icons-material/VisibilityOffRounded";
 import VisibilityRoundedIcon from "@mui/icons-material/VisibilityRounded";
-import { DM_Sans, Sora } from "next/font/google";
 import * as CryptoJS from "crypto-js";
 import { authService } from "@/services";
 import { useAuthStore } from "@/stores/auth.store";
+import { APP_COLORS } from "@/theme/tokens";
+import { alpha } from "@mui/material/styles";
 import {
   Box,
   Button,
   Checkbox,
-  CssBaseline,
   Divider,
   FormControlLabel,
   IconButton,
@@ -24,20 +24,8 @@ import {
   Paper,
   Stack,
   TextField,
-  ThemeProvider,
   Typography,
-  createTheme,
 } from "@mui/material";
-
-const headingFont = Sora({
-  subsets: ["latin"],
-  weight: ["600", "700"],
-});
-
-const bodyFont = DM_Sans({
-  subsets: ["latin"],
-  weight: ["400", "500", "700"],
-});
 
 type LoginForm = {
   email: string;
@@ -60,56 +48,6 @@ const LoginPage = () => {
   const [rememberUser, setRememberUser] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-
-  const theme = useMemo(
-    () =>
-      createTheme({
-        palette: {
-          primary: {
-            main: "#75AD2A",
-            dark: "#5F8F21",
-            light: "#93C84D",
-          },
-          background: {
-            default: "#FFFFFF",
-          },
-        },
-        shape: {
-          borderRadius: 16,
-        },
-        typography: {
-          fontFamily: bodyFont.style.fontFamily,
-          h4: {
-            fontWeight: 700,
-            fontFamily: headingFont.style.fontFamily,
-            letterSpacing: "-0.03em",
-          },
-          h5: {
-            fontFamily: headingFont.style.fontFamily,
-            fontWeight: 700,
-            letterSpacing: "-0.02em",
-          },
-          body2: {
-            color: "#5A5F55",
-          },
-        },
-        components: {
-          MuiTextField: {
-            defaultProps: {
-              variant: "outlined",
-            },
-            styleOverrides: {
-              root: {
-                "& .MuiOutlinedInput-root": {
-                  borderRadius: 14,
-                },
-              },
-            },
-          },
-        },
-      }),
-    [],
-  );
 
   const handleChange = (field: keyof LoginForm, value: string) => {
     setForm((current) => ({ ...current, [field]: value }));
@@ -164,9 +102,15 @@ const LoginPage = () => {
   };
 
   return (
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
-
+    <Box
+      component="main"
+      data-mui-color-scheme="light"
+      sx={{
+        colorScheme: "light",
+        color: APP_COLORS.secondary,
+        backgroundColor: APP_COLORS.surface,
+      }}
+    >
       <Box
         sx={{
           minHeight: "100dvh",
@@ -195,7 +139,7 @@ const LoginPage = () => {
               transform: "translateY(0)",
             },
           },
-          background: "#FFFFFF",
+          background: `linear-gradient(160deg, ${alpha(APP_COLORS.surface, 0.94)} 0%, ${alpha(APP_COLORS.primary, 0.08)} 100%)`,
         }}
       >
         <Paper
@@ -205,8 +149,8 @@ const LoginPage = () => {
             maxWidth: 980,
             overflow: "hidden",
             borderRadius: 6,
-            border: "1px solid rgba(117, 173, 42, 0.20)",
-            boxShadow: "0 18px 48px rgba(44, 78, 16, 0.16)",
+            border: `1px solid ${alpha(APP_COLORS.primary, 0.28)}`,
+            boxShadow: "0 18px 48px rgba(10, 46, 28, 0.14)",
             display: "grid",
             gridTemplateColumns: {
               xs: "1fr",
@@ -219,7 +163,7 @@ const LoginPage = () => {
             sx={{
               position: "relative",
               bgcolor: "primary.main",
-              color: "#F7FBEF",
+              color: APP_COLORS.surface,
               p: { xs: 4, md: 6 },
               display: "flex",
               flexDirection: "column",
@@ -233,8 +177,7 @@ const LoginPage = () => {
               sx={{
                 position: "absolute",
                 inset: 0,
-                background:
-                  "linear-gradient(140deg, rgba(255,255,255,0.22) 0%, transparent 60%)",
+                background: `linear-gradient(140deg, ${alpha(APP_COLORS.surface, 0.18)} 0%, ${alpha(APP_COLORS.primary, 0.06)} 60%, transparent 100%)`,
                 zIndex: -1,
               }}
             />
@@ -246,7 +189,7 @@ const LoginPage = () => {
                 width: 188,
                 height: 188,
                 borderRadius: "50%",
-                border: "1px dashed rgba(255,255,255,0.35)",
+                border: `1px dashed ${alpha(APP_COLORS.surface, 0.35)}`,
               }}
             />
             <Box
@@ -257,7 +200,7 @@ const LoginPage = () => {
                 width: 56,
                 height: 56,
                 borderRadius: 2,
-                bgcolor: "rgba(255,255,255,0.10)",
+                bgcolor: alpha(APP_COLORS.surface, 0.1),
                 transform: "rotate(15deg)",
               }}
             />
@@ -270,8 +213,8 @@ const LoginPage = () => {
                   px: 2,
                   py: 1.5,
                   borderRadius: 3,
-                  bgcolor: "rgba(255, 255, 255, 0.78)",
-                  border: "1px solid rgba(255, 255, 255, 0.92)",
+                  bgcolor: alpha(APP_COLORS.surface, 0.78),
+                  border: `1px solid ${alpha(APP_COLORS.surface, 0.92)}`,
                   backdropFilter: "blur(3px)",
                   boxShadow: "0 10px 26px rgba(35, 58, 15, 0.22)",
                   animation: "pulseFloat 4s ease-in-out infinite",
@@ -312,7 +255,7 @@ const LoginPage = () => {
             onSubmit={handleSubmit}
             sx={{
               p: { xs: 4, md: 6 },
-              bgcolor: "#FFFFFF",
+              bgcolor: APP_COLORS.surface,
               display: "flex",
               flexDirection: "column",
               justifyContent: "center",
@@ -321,10 +264,13 @@ const LoginPage = () => {
             }}
           >
             <Stack spacing={1}>
-              <Typography variant="h5" sx={{ color: "#22281A" }}>
+              <Typography variant="h5" sx={{ color: APP_COLORS.secondary }}>
                 Iniciar sesion
               </Typography>
-              <Typography variant="body2">
+              <Typography
+                variant="body2"
+                sx={{ color: alpha(APP_COLORS.secondary, 0.82) }}
+              >
                 Ingresa con tu correo corporativo y contraseña.
               </Typography>
             </Stack>
@@ -339,11 +285,37 @@ const LoginPage = () => {
                 fullWidth
                 autoComplete="email"
                 InputProps={{
+                  sx: {
+                    bgcolor: APP_COLORS.surface,
+                    "& .MuiInputBase-input": {
+                      color: APP_COLORS.secondary,
+                    },
+                  },
                   startAdornment: (
                     <InputAdornment position="start">
-                      <EmailOutlinedIcon fontSize="small" />
+                      <EmailOutlinedIcon
+                        fontSize="small"
+                        sx={{ color: alpha(APP_COLORS.secondary, 0.7) }}
+                      />
                     </InputAdornment>
                   ),
+                }}
+                sx={{
+                  "& .MuiInputLabel-root": {
+                    color: alpha(APP_COLORS.secondary, 0.75),
+                  },
+                  "& .MuiOutlinedInput-root": {
+                    borderRadius: 2,
+                    "& fieldset": {
+                      borderColor: alpha(APP_COLORS.secondary, 0.24),
+                    },
+                    "&:hover fieldset": {
+                      borderColor: alpha(APP_COLORS.secondary, 0.38),
+                    },
+                    "&.Mui-focused fieldset": {
+                      borderColor: APP_COLORS.primary,
+                    },
+                  },
                 }}
               />
 
@@ -358,9 +330,18 @@ const LoginPage = () => {
                 fullWidth
                 autoComplete="current-password"
                 InputProps={{
+                  sx: {
+                    bgcolor: APP_COLORS.surface,
+                    "& .MuiInputBase-input": {
+                      color: APP_COLORS.secondary,
+                    },
+                  },
                   startAdornment: (
                     <InputAdornment position="start">
-                      <LockOutlinedIcon fontSize="small" />
+                      <LockOutlinedIcon
+                        fontSize="small"
+                        sx={{ color: alpha(APP_COLORS.secondary, 0.7) }}
+                      />
                     </InputAdornment>
                   ),
                   endAdornment: (
@@ -369,6 +350,7 @@ const LoginPage = () => {
                         aria-label="Mostrar u ocultar contrasena"
                         onClick={() => setShowPassword((state) => !state)}
                         edge="end"
+                        sx={{ color: alpha(APP_COLORS.secondary, 0.68) }}
                       >
                         {showPassword ? (
                           <VisibilityOffRoundedIcon fontSize="small" />
@@ -378,6 +360,23 @@ const LoginPage = () => {
                       </IconButton>
                     </InputAdornment>
                   ),
+                }}
+                sx={{
+                  "& .MuiInputLabel-root": {
+                    color: alpha(APP_COLORS.secondary, 0.75),
+                  },
+                  "& .MuiOutlinedInput-root": {
+                    borderRadius: 2,
+                    "& fieldset": {
+                      borderColor: alpha(APP_COLORS.secondary, 0.24),
+                    },
+                    "&:hover fieldset": {
+                      borderColor: alpha(APP_COLORS.secondary, 0.38),
+                    },
+                    "&.Mui-focused fieldset": {
+                      borderColor: APP_COLORS.primary,
+                    },
+                  },
                 }}
               />
             </Stack>
@@ -391,7 +390,7 @@ const LoginPage = () => {
                 />
               }
               label="Recordarme en este equipo"
-              sx={{ mt: -1, color: "#4A5540" }}
+              sx={{ mt: -1, color: alpha(APP_COLORS.secondary, 0.9) }}
             />
 
             <Button
@@ -403,12 +402,22 @@ const LoginPage = () => {
               sx={{
                 py: 1.4,
                 fontWeight: 700,
+                letterSpacing: 0.2,
                 textTransform: "none",
                 borderRadius: 3,
                 boxShadow: "none",
                 minHeight: 48,
+                bgcolor: APP_COLORS.primary,
+                color: APP_COLORS.surface,
+                border: `1px solid ${alpha(APP_COLORS.secondary, 0.08)}`,
                 "&:hover": {
                   boxShadow: "none",
+                  bgcolor: alpha(APP_COLORS.primary, 0.92),
+                },
+                "&:disabled": {
+                  color: alpha(APP_COLORS.surface, 0.82),
+                  bgcolor: alpha(APP_COLORS.primary, 0.65),
+                  borderColor: "transparent",
                 },
               }}
             >
@@ -416,12 +425,15 @@ const LoginPage = () => {
             </Button>
 
             {errorMessage ? (
-              <Typography variant="body2" sx={{ color: "#B3261E", mt: -1 }}>
+              <Typography
+                variant="body2"
+                sx={{ color: APP_COLORS.secondary, mt: -1 }}
+              >
                 {errorMessage}
               </Typography>
             ) : null}
 
-            <Divider sx={{ borderColor: "rgba(117, 173, 42, 0.2)" }} />
+            <Divider sx={{ borderColor: alpha(APP_COLORS.primary, 0.2) }} />
 
             <Stack
               direction={{ xs: "column", sm: "row" }}
@@ -459,7 +471,7 @@ const LoginPage = () => {
           </Box>
         </Paper>
       </Box>
-    </ThemeProvider>
+    </Box>
   );
 };
 
