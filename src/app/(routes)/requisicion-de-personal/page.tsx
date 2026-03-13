@@ -6,6 +6,7 @@ import DeleteOutlineRoundedIcon from "@mui/icons-material/DeleteOutlineRounded";
 import EditRoundedIcon from "@mui/icons-material/EditRounded";
 import RefreshRoundedIcon from "@mui/icons-material/RefreshRounded";
 import SwapVertRoundedIcon from "@mui/icons-material/SwapVertRounded";
+import { ProductForm } from "./components/product-form";
 import {
   Box,
   Button,
@@ -74,8 +75,6 @@ const PersonnelRequisitionPage = () => {
 
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingProductId, setEditingProductId] = useState<number | null>(null);
-  const [formName, setFormName] = useState("");
-  const [formQuantity, setFormQuantity] = useState("");
   const [deleteTarget, setDeleteTarget] = useState<Product | null>(null);
 
   const [page, setPage] = useState(0);
@@ -112,32 +111,22 @@ const PersonnelRequisitionPage = () => {
 
   const openCreateForm = () => {
     setEditingProductId(null);
-    setFormName("");
-    setFormQuantity("");
     setIsFormOpen(true);
   };
 
   const openEditForm = (product: Product) => {
     setEditingProductId(product.id);
-    setFormName(product.name);
-    setFormQuantity(String(product.quantity));
     setIsFormOpen(true);
   };
 
   const closeForm = () => {
     setIsFormOpen(false);
     setEditingProductId(null);
-    setFormName("");
-    setFormQuantity("");
   };
 
-  const handleSaveProduct = () => {
-    const safeName = formName.trim();
-    const safeQuantity = Number(formQuantity);
-
-    if (!safeName || Number.isNaN(safeQuantity) || safeQuantity < 0) {
-      return;
-    }
+  const handleSaveProduct = (payload: { name: string; quantity: number }) => {
+    const safeName = payload.name.trim();
+    const safeQuantity = payload.quantity;
 
     if (editingProductId !== null) {
       setProducts((current) =>
@@ -225,6 +214,63 @@ const PersonnelRequisitionPage = () => {
 
     return sortDirection;
   };
+
+  const highlightQuery = debouncedSearchTerm.trim();
+
+  const escapeRegExp = (value: string) =>
+    value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
+  const renderHighlightedText = (value: string | number) => {
+    const text = String(value);
+
+    if (!highlightQuery) {
+      return text;
+    }
+
+    const matcher = new RegExp(`(${escapeRegExp(highlightQuery)})`, "ig");
+    const chunks = text.split(matcher);
+
+    return chunks.map((chunk, index) => {
+      const isMatch = chunk.toLowerCase() === highlightQuery.toLowerCase();
+
+      if (!isMatch) {
+        return <Box component="span" key={`${chunk}-${index}`}>{chunk}</Box>;
+      }
+
+      return (
+        <Box
+          component="mark"
+          key={`${chunk}-${index}`}
+          sx={{
+            px: 0.35,
+            py: 0.05,
+            borderRadius: "6px",
+            backgroundColor: alpha(APP_COLORS.primary, 0.26),
+            color: "inherit",
+          }}
+        >
+          {chunk}
+        </Box>
+      );
+    });
+  };
+
+  const editingProduct =
+    editingProductId !== null
+      ? products.find((product) => product.id === editingProductId) ?? null
+      : null;
+
+  if (isFormOpen) {
+    return (
+      <ProductForm
+        isEditing={editingProductId !== null}
+        initialName={editingProduct?.name}
+        initialQuantity={editingProduct?.quantity}
+        onCancel={closeForm}
+        onSubmit={handleSaveProduct}
+      />
+    );
+  }
 
   return (
     <Stack spacing={2.5}>
@@ -329,65 +375,6 @@ const PersonnelRequisitionPage = () => {
         </Stack>
       </Stack>
 
-      {isFormOpen ? (
-        <Card
-          sx={{
-            borderRadius: "16px",
-            border: `1px solid ${alpha(APP_COLORS.primary, 0.25)}`,
-            backgroundColor: "background.paper",
-            boxShadow: `0 6px 16px ${alpha(APP_COLORS.secondary, 0.08)}`,
-          }}
-        >
-          <CardContent>
-            <Stack spacing={1.5}>
-              <Typography sx={{ fontWeight: 700, color: "text.primary" }}>
-                {editingProductId !== null
-                  ? "Editar producto"
-                  : "Crear producto"}
-              </Typography>
-
-              <Stack direction={{ xs: "column", md: "row" }} spacing={1.5}>
-                <TextField
-                  label="Nombre"
-                  value={formName}
-                  onChange={(event) => setFormName(event.target.value)}
-                  fullWidth
-                />
-                <TextField
-                  label="Cantidad"
-                  type="number"
-                  value={formQuantity}
-                  onChange={(event) => setFormQuantity(event.target.value)}
-                  fullWidth
-                  inputProps={{ min: 0 }}
-                />
-              </Stack>
-
-              <Stack direction="row" spacing={1.25}>
-                <Button
-                  variant="contained"
-                  onClick={handleSaveProduct}
-                  sx={{
-                    bgcolor: APP_COLORS.primary,
-                    color: APP_COLORS.surface,
-                    borderRadius: "12px",
-                  }}
-                >
-                  Guardar
-                </Button>
-                <Button
-                  variant="text"
-                  onClick={closeForm}
-                  sx={{ color: "text.secondary" }}
-                >
-                  Cancelar
-                </Button>
-              </Stack>
-            </Stack>
-          </CardContent>
-        </Card>
-      ) : null}
-
       <Card
         sx={{
           borderRadius: "16px",
@@ -479,9 +466,21 @@ const PersonnelRequisitionPage = () => {
                   },
                 }}
               >
-                <TableCell>{product.id}</TableCell>
-                <TableCell>{product.name}</TableCell>
-                <TableCell>{product.quantity}</TableCell>
+                <TableCell>
+                  <Typography component="span" sx={{ fontSize: 14 }}>
+                    {renderHighlightedText(product.id)}
+                  </Typography>
+                </TableCell>
+                <TableCell>
+                  <Typography component="span" sx={{ fontSize: 14 }}>
+                    {renderHighlightedText(product.name)}
+                  </Typography>
+                </TableCell>
+                <TableCell>
+                  <Typography component="span" sx={{ fontSize: 14 }}>
+                    {renderHighlightedText(product.quantity)}
+                  </Typography>
+                </TableCell>
                 <TableCell>
                   <Stack direction="row" spacing={0.5}>
                     <IconButton
